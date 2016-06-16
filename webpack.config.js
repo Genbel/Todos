@@ -24,7 +24,8 @@ module.exports = {
         exclude: /node_modules/,
         include: __dirname,
         query: {
-          presets: ['react', 'es2015']
+          presets: ['react', 'es2015'],
+          plugins: ['transform-object-rest-spread']
         }
       }
     ]

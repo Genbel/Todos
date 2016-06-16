@@ -13,6 +13,8 @@ const configureStore = () => {
 
     const store = createStore(todoApp, persistedState);
 
+    
+
     // When the store change it will trigger subscribe and it will save in the localStoreage
     store.subscribe(throttle(() => {
         saveState({

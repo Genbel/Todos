@@ -1,56 +1,64 @@
-const todo = (state, action) => {
+import { combineReducers } from 'redux';
+import todo from './todo';
+
+// The previous implementation was not correct one because we can have,
+// same id in different array(with v4-uuid it could be imposible but just in case)
+// To fix this problem we will create a look-up table that it works as database table
+//
+const byId = (state = {}, action) => {
   switch (action.type) {
+    // Now the value is gonna change in the look up table
     case 'ADD_TODO':
+    case 'TOGGLE_TODO':
+        // From now both actions will do the same so when,
+        // we want want to change a to do or add it will change
+        // our actual look-up table.
+        // Here we are using object spread operator. This is not part of ES6, so
+        // we need to enable a plugin 'transform-object-rest-spread' video 11 (1:11)
       return {
-        id: action.id,
-        text: action.text,
-        completed: false
-      }
-    case 'TOGGLE_TODO':
-      if (state.id !== action.id) {
-        return state
+        ...state,
+        [action.id]: todo(state[action.id], action)
       }
 
-      return Object.assign({}, state, {
-        completed: !state.completed
-      })
     default:
       return state
   }
 }
 
-// That states corresponds the state of that particular reducer
-const todos = (state = [], action) => {
+// Another Reducer, to track all the ids
+const allIds = (state = [], action) => {
   switch (action.type) {
     case 'ADD_TODO':
-      return [
-        ...state,
-        todo(undefined, action)
-      ]
-    case 'TOGGLE_TODO':
-      return state.map(t =>
-        todo(t, action)
-      )
+          return [...state, action.id];
     default:
-      return state
+          return state;
   }
 }
-// The default export is always the reducer function, in that case
-export default todos
 
-// We call to this function SELECTORS because it select something from the current state
-// Any named function of 'get' is that prepares the data to be displayed for the UI
-// We follow the same convention in the selector. The state argument will follow to the state of the exported reducer
-// If we want to change, the only thing that we have to change is getVisibleTodos but I will not change my component implementation because
-// because they dont rely on the state shape anymore
+// create inside of reducer another reducers
+const todos = combineReducers({
+  byId,
+  allIds
+});
+
+export default todos;
+
+const getAllTodos = (state) =>
+  state.allIds.map(id => state.byId[id]);
+
+
+
 export const getVisibleTodos = (state, filter) => {
+
+  const allTodos = getAllTodos(state);
+
   switch (filter) {
     case 'all':
-      return state
+      return allTodos
     case 'completed':
-      return state.filter(t => t.completed)
+      return allTodos.filter(t => t.completed)
     case 'active':
-      return state.filter(t => !t.completed)
+      return allTodos.filter(t => !t.completed)
     default:
           throw new Error(`Unkown filter: ${filter}.`);
   }
