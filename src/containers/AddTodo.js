@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { addTodo } from '../actions'
 
+// Get the dispatch function from props
 let AddTodo = ({ dispatch }) => {
   let input
 
@@ -25,6 +26,8 @@ let AddTodo = ({ dispatch }) => {
     </div>
   )
 }
+// If we write like this we do not set any state but yes the dispatch funcion,
+// function from props
 AddTodo = connect()(AddTodo)
 
 export default AddTodo

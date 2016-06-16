@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Redux Todos example",
   "scripts": {
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "test": "cross-env NODE_ENV=test mocha --recursive --compilers --require ./test/setup.js",
     "test:watch": "npm test -- --watch"
   },

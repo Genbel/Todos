@@ -3,10 +3,11 @@ import Footer from './Footer'
 import AddTodo from './../containers/AddTodo'
 import VisibleTodoList from './../containers/VisibleTodoList'
 
-const App = () => (
+// Params is available from the properties because router inject this property: params
+const App = ({ params }) => (
   <div>
     <AddTodo />
-    <VisibleTodoList />
+    <VisibleTodoList filter={params.filter || 'all'}/>
     <Footer />
   </div>
 )

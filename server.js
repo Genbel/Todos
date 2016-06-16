@@ -10,7 +10,10 @@ var compiler = webpack(config)
 app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }))
 app.use(webpackHotMiddleware(compiler))
 
-app.get("/", function(req, res) {
+// We do that because when we refresh the page and we have another route
+// that is not / is give and error so writting that it will forward to the same page
+// all the time index.html
+app.get("/*", function(req, res) {
   res.sendFile(__dirname + '/index.html')
 })
 
