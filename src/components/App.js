@@ -4,10 +4,10 @@ import AddTodo from './../containers/AddTodo'
 import VisibleTodoList from './../containers/VisibleTodoList'
 
 // Params is available from the properties because router inject this property: params
-const App = ({ params }) => (
+const App = () => (
   <div>
     <AddTodo />
-    <VisibleTodoList filter={params.filter || 'all'}/>
+    <VisibleTodoList />
     <Footer />
   </div>
 )

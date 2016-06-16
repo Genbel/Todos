@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router';
 import { toggleTodo } from '../actions'
 import TodoList from '../components/TodoList'
 
@@ -13,8 +14,13 @@ const getVisibleTodos = (todos, filter) => {
   }
 }
 
+// If we dont set withRouter, we cannot access to params values.
+// IMPORTANT: react-router has to be 3.0 version
 const mapStateToProps = (state, ownProps) => ({
-    todos: getVisibleTodos(state.todos, ownProps.filter)
+    todos: getVisibleTodos(
+        state.todos,
+        ownProps.params.filter || 'all'
+    )
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -23,9 +29,9 @@ const mapDispatchToProps = (dispatch) => ({
     }
 });
 
-const VisibleTodoList = connect(
+const VisibleTodoList = withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(TodoList)
+)(TodoList))
 
 export default VisibleTodoList
