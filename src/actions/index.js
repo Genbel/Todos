@@ -7,15 +7,10 @@ const receiveTodos = (filter, response) => ({
     response
 })
 
-export const fetchTodos = (filter) => {
-    console.log('FetchTodos', api.fetchTodos(filter));
-    return api.fetchTodos(filter).then(response => {
-            console.log(response);
-            return receiveTodos(filter, response)
-        }
+export const fetchTodos = (filter) =>
+    api.fetchTodos(filter).then(response =>
+        receiveTodos(filter, response)
     );
-}
-
 
 export const addTodo = (text) => ({
     type: 'ADD_TODO',
