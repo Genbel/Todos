@@ -19,6 +19,34 @@ const addLoggingToDispatch = (store) => {
     }
 }
 
+const addPromiseSupportToDispatch = (store) => {
+    const rawDispatch = store.dispatch;
+    // Is the way to tell that the action is a promise. Video 16(3:25)
+    return (action) => {
+        if(typeof action.then === 'function'){
+            // We wait to the promise and we pass to the dispatch the action
+            return action.then(rawDispatch);
+        }
+        return rawDispatch(action);
+    }
+}
+
+const exampleOfInvokingOrNotTheFunction = (store, index) => {
+    const rawDispatch = store.dispatch;
+    if(index){
+        console.log(rawDispatch);
+        return rawDispatch;
+    } else {
+        return (action) => {
+            console.log(action);
+            return rawDispatch(action);
+        }
+    }
+}
+
+// The order how we set up the middlewares is really important. The last that we assign is
+// going to be the first that is going to exec in the middleware chain.
+// But first we need to override or overwrites the store.dispatch function.
 const configureStore = () => {
 
     const store = createStore(todoApp);
@@ -27,7 +55,10 @@ const configureStore = () => {
         // Overwrite the dispatch method
         store.dispatch = addLoggingToDispatch(store);
     }
+    store.dispatch = exampleOfInvokingOrNotTheFunction(store, true);
 
+    store.dispatch = addPromiseSupportToDispatch(store);
+    console.log(store);
     return store;
 }
 
