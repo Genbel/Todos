@@ -1,42 +1,44 @@
 import { createStore } from 'redux';
 import todoApp from './reducers';
 
+// That one can be called as logger middleware
 const addLoggingToDispatch = (store) => {
     // In that case it will return to the original dispatch of the store
-    const next = store.dispatch;
+    return (next) => {
 
-    if(!console.group){
-        return next;
-    }
-    return (action) => {
-        console.group(action.type);
-        console.log('%c prev state \n','color: green', store.getState());
-        console.log('%c action \n', 'color: blue', action);
-        const returnValue = next(action);
-        console.log('%c next state \n', 'color:red', store.getState());
-        console.groupEnd(action.type);
-        return returnValue;
+        if (!console.group) {
+            return next;
+        }
+        return (action) => {
+            console.group(action.type);
+            console.log('%c prev state \n', 'color: green', store.getState());
+            console.log('%c action \n', 'color: blue', action);
+            const returnValue = next(action);
+            console.log('%c next state \n', 'color:red', store.getState());
+            console.groupEnd(action.type);
+            return returnValue;
+        }
     }
 }
 
+// That one can be called as promise middleware
 const addPromiseSupportToDispatch = (store) => {
-    // rawDispatch is the previous value of the dispatch
-    // We will change rawDispatch for next because this is the next dispatch function in the chain
-    // that we will launch
-    const next = store.dispatch;
 
-    return (action) => {
-        if(typeof action.then === 'function'){
+    return (next) => {
+        return (action) => {
+            if(typeof action.then === 'function'){
 
-            return action.then(next);
+                return action.then(next);
+            }
+            return next(action);
         }
-        return next(action);
     }
 }
 
 const wrapDispatchWithMiddlewares = (store, middlewares) => {
+    // We will pass the previous value of the dispatch
     middlewares.forEach( middleware =>
-        store.dispatch = middleware(store)
+        store.dispatch = middleware(store)(store.dispatch)
     )
 }
 
@@ -56,7 +58,7 @@ const configureStore = () => {
     middlewares.push(addPromiseSupportToDispatch);
 
     wrapDispatchWithMiddlewares(store, middlewares);
-    
+
     return store;
 }
 
