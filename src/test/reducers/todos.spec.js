@@ -1,5 +1,5 @@
 import expect from 'expect'
-import todos from '../../reducers/todos'
+import todos from '../../reducers/index'
 
 describe('todos reducer', () => {
   it('should handle initial state', () => {
