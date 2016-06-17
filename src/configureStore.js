@@ -19,11 +19,17 @@ const addLoggingToDispatch = (store) => {
     }
 }
 
+// The middleware always is on top of the dispatch function.
+// Thats why our middleware detect that is a promise return, line 30, because when we call an ActionCreator from VisibleTodoList,
+// which return an action normally,
+// the middleware is waiting to get some return object from the action creator and the API return at first is a promise object.
+// After that 500ms time, we get the response and the middleware send to the next middleware in that case the log-redux object.
 const addPromiseSupportToDispatch = (store) => {
     const rawDispatch = store.dispatch;
     // Is the way to tell that the action is a promise. Video 16(3:25)
     return (action) => {
         if(typeof action.then === 'function'){
+            console.log(action);
             // We wait to the promise and we pass to the dispatch the action
             return action.then(rawDispatch);
         }
@@ -55,7 +61,7 @@ const configureStore = () => {
         // Overwrite the dispatch method
         store.dispatch = addLoggingToDispatch(store);
     }
-    store.dispatch = exampleOfInvokingOrNotTheFunction(store, true);
+    store.dispatch = exampleOfInvokingOrNotTheFunction(store, false);
 
     store.dispatch = addPromiseSupportToDispatch(store);
     console.log(store);
