@@ -1,11 +1,17 @@
 import { createStore, applyMiddleware } from 'redux';
-import promise from 'redux-promise';
 import createLogger from 'redux-logger';
 import todoApp from './reducers';
 
+const thunk = (store) => (next) => (action) =>
+    typeof action === 'function'?
+        // Setting like this the action, is available in all the actions,
+        // the dispatch function. Video 22(4:00)
+        action(store.dispatch) :
+        next(action);
+
 const configureStore = () => {
 
-    const middlewares = [promise];
+    const middlewares = [thunk];
     if(process.env.NODE_ENV !== 'production'){
         middlewares.push(createLogger());
     }

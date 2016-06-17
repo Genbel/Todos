@@ -9,8 +9,7 @@ class VisibleTodoList extends Component {
 
     renderTodos(){
         console.log(this.props);
-        const { filter, requestTodos, fetchTodos } = this.props;
-        requestTodos(filter);
+        const { filter, fetchTodos } = this.props;
         fetchTodos(filter);
     }
     componentDidMount(){
