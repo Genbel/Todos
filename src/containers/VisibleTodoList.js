@@ -8,7 +8,6 @@ import TodoList from '../components/TodoList'
 class VisibleTodoList extends Component {
 
     renderTodos(){
-        console.log(this.props);
         const { filter, fetchTodos } = this.props;
         fetchTodos(filter);
     }

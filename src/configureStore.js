@@ -1,12 +1,13 @@
 import { createStore, applyMiddleware } from 'redux';
 import createLogger from 'redux-logger';
 import todoApp from './reducers';
+import { thunk } from 'redux-thunk';
 
 const thunk = (store) => (next) => (action) =>
     typeof action === 'function'?
-        // Setting like this the action, is available in all the actions,
-        // the dispatch function. Video 22(4:00)
-        action(store.dispatch) :
+        // Setting like this the action, is available in all the actions
+        // the dispatch function and getState. Video 22(4:00)
+        action(store.dispatch, store.getState) :
         next(action);
 
 const configureStore = () => {
